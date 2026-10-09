@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Registo de livros na ESGN</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f2f4f7">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fundo:#f2f4f7;--painel:#fff;--destaque:#4338ca;--ok:#0f766e;--texto:#111827;--bg:none;--bad:#dc2626;--warn:#d97706;--ent:color-mix(in srgb,var(--texto) 6%,var(--painel));--linha:color-mix(in srgb,var(--texto) 13%,var(--painel));--mut:color-mix(in srgb,var(--texto) 58%,var(--painel));color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--fundo) var(--bg) center/cover fixed;color:var(--texto);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:90px}
+main{max-width:680px;margin:0 auto;padding:12px 16px}
+h2{font:700 16px Sora,system-ui,sans-serif;margin:20px 0 8px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:10px;padding:10px 16px;background:color-mix(in srgb,var(--painel) 94%,transparent);border-bottom:1px solid var(--linha)}
+.top>div{flex:1;min-width:0}.top b{display:block;font:700 15px Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logo{width:38px;height:38px;object-fit:contain;border-radius:10px}.logo.e{font-size:28px;width:auto;height:auto}
+.card{background:color-mix(in srgb,var(--painel) 94%,transparent);border:1px solid var(--linha);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.card.bad{border-color:var(--bad)}.card.soon{border-color:var(--warn)}
+.hero{background:linear-gradient(135deg,var(--destaque),var(--ok));color:#fff;border-radius:18px;padding:18px;display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.hero .logo{width:56px;height:56px;background:#fff;padding:4px;border-radius:14px}.hero .logo.e{font-size:42px;background:none}
+.hero b{font:700 20px Sora,system-ui,sans-serif}.hero small{display:block;opacity:.9;text-transform:capitalize}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:4px}.stats b{display:block;font:700 24px Sora,system-ui,sans-serif}.stats span{font-size:12px;color:var(--mut)}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.quick button{background:var(--painel);border:1px solid var(--linha);padding:12px 4px;font-size:14px;font-weight:600}.quick i{display:block;font-style:normal;font-size:22px}
+.seg{display:flex;background:var(--ent);border-radius:11px;padding:3px;margin:8px 0 10px}
+.seg button{flex:1;background:none;padding:8px 4px;font-size:14px;border-radius:9px;color:var(--mut)}
+.seg button[aria-pressed="true"]{background:var(--painel);color:var(--texto);font-weight:700;box-shadow:0 1px 3px #0003}
+.bar{display:flex;gap:8px;margin:2px 0 10px}.bar input{flex:1}.bar button{white-space:nowrap}
+.item{display:flex;gap:12px;align-items:flex-start}.item .info{flex:1;min-width:0}
+.av{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:700;background:color-mix(in srgb,var(--destaque) 14%,var(--painel));color:var(--destaque)}
+.mini{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--linha)}
+label{display:block;font-size:14px;color:var(--mut);margin:9px 0 3px}
+input,select{width:100%;font:inherit;color:var(--texto);background:var(--ent);border:1px solid var(--linha);border-radius:10px;padding:10px}
+input[type=color]{padding:2px;height:42px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:0;background:var(--ent);color:var(--texto);padding:9px 14px}
+button.pri{background:var(--ok);color:#fff;font-weight:700;margin-top:14px;width:100%}
+button.full{width:100%;margin-top:8px}button.blue{background:var(--destaque);color:#fff}button.red{background:var(--bad);color:#fff}
+button.sm{padding:7px 12px;font-size:14px}button:disabled{opacity:.5}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.t{font-weight:600}.m{color:var(--mut);font-size:14px}
+.chip{display:inline-block;font-size:13px;border-radius:99px;padding:2px 10px;margin-top:5px;background:color-mix(in srgb,var(--ok) 18%,var(--painel));color:var(--ok);font-weight:600}
+.chip.bad{background:color-mix(in srgb,var(--bad) 16%,var(--painel));color:var(--bad)}.chip.warn{background:color-mix(in srgb,var(--warn) 18%,var(--painel));color:var(--warn)}.chip.gray{background:var(--ent);color:var(--mut)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.kpi{border-radius:14px;padding:12px;text-align:center;color:#fff}.kpi i{font-style:normal;font-size:22px}.kpi b{display:block;font:700 26px Sora,system-ui,sans-serif}.kpi span{font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pre{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.empty{color:var(--mut);text-align:center;padding:18px 8px}
+.login{max-width:380px;margin:5vh auto 0}.login .hero{flex-direction:column;text-align:center;padding:26px 18px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--painel);border-top:1px solid var(--linha);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border-radius:0;background:none;padding:8px 2px;font-size:11.5px;color:var(--mut);line-height:1.2}
+nav button i{display:block;font-style:normal;font-size:21px}
+nav button[aria-selected="true"]{color:var(--destaque);font-weight:700;box-shadow:inset 0 3px 0 var(--destaque)}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--texto);color:var(--painel);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
+#toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style></head>
+<body>
+<div id="top" class="top" hidden></div>
+<main id="app"></main>
+<nav id="nav" role="tablist" hidden></nav>
+<div id="toast" role="status"></div>
+<script>
+/* ===== 1. DADOS E ARMAZENAMENTO ===== */
+const KEY="bibliocontrol-v1";
+const DEF={v:2,dias:7,ent:"ESGN",sis:"Registo de livros na ESGN",sub:"Gestão da biblioteca escolar",fundo:"#f2f4f7",painel:"#ffffff",destaque:"#4338ca",ok:"#0f766e",texto:"#111827",logo:"",bg:""};
+const PRE=[["Claro","#f2f4f7","#ffffff","#4338ca","#0f766e","#111827"],["Escuro","#0f172a","#1e293b","#818cf8","#14b8a6","#f1f5f9"],["Verde","#eef5f0","#ffffff","#166534","#b45309","#14231a"],["Rosa","#fbf1f4","#ffffff","#be185d","#7c3aed","#2a1520"]];
+let D={livros:[],alunos:[],func:[],emp:[],dia:{},cfg:{}};
+try{const p=JSON.parse(localStorage.getItem(KEY)||"null");if(p)D=Object.assign(D,p)}catch(e){}
+const S={tab:"ini",sub:{pessoas:"alunos",mais:"rel",circ:"curso"},open:{},ed:{},q:{},me:null};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast("Sem espaço para guardar. Use uma imagem mais pequena.")}};
+const g=(a,id)=>a.find(x=>x.id==id),nm=(a,id)=>(g(a,id)||{nome:"(removido)"}).nome;
+const act=()=>D.emp.filter(e=>!e.ret),out=id=>act().filter(e=>e.livro==id),disp=l=>l.qtd-out(l.id).length;
+const late=e=>Math.max(0,diff(e.ret||today(),e.dev)),atras=()=>act().filter(e=>late(e)>0),breve=()=>act().filter(e=>{const d=diff(e.dev,today());return d>=0&&d<=2});
+const hash=async(u,p)=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode("esgn|"+u+"|"+p)))].map(b=>b.toString(16).padStart(2,"0")).join("");
+
+/* ===== 2. UTILITÁRIOS ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const plus=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const diff=(a,b)=>Math.round((Date.parse(a+"T00:00:00Z")-Date.parse(b+"T00:00:00Z"))/864e5);
+const fmt=d=>new Date(d+"T00:00:00").toLocaleDateString("pt-PT");
+const toast=t=>{const e=$("#toast");e.textContent=t;e.className="on";clearTimeout(toast.t);toast.t=setTimeout(()=>e.className="",2800)};
+const dl=async(n,t,m)=>{try{const d=window.claude&&await claude.use("downloads");if(d){await d.save({filename:n,data:t});return}}catch(e){if(e&&e.code=="declined")return}const u=URL.createObjectURL(new Blob([t],{type:m})),a=document.createElement("a");a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)};
+function img(f,max,type,cb){const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);cb(c.toDataURL(type,.65))};i.src=r.result};r.readAsDataURL(f)}
+function apply(){
+  const c=D.cfg,r=document.documentElement.style;
+  ["fundo","painel","destaque","ok","texto"].forEach(k=>r.setProperty("--"+k,c[k]));
+  r.setProperty("--bg",c.bg?`url("${c.bg}")`:"none");
+  const h=c.fundo.replace("#",""),L=parseInt(h.slice(0,2),16)*.3+parseInt(h.slice(2,4),16)*.59+parseInt(h.slice(4,6),16)*.11;
+  r.colorScheme=L>140?"light":"dark";$("meta[name=theme-color]").content=c.fundo;document.title=c.sis;
+}
+async function boot(){
+  D.cfg=Object.assign({},DEF,D.cfg||{});
+  if(D.cfg.v!==2){["fundo","painel","destaque","ok","texto"].forEach(k=>D.cfg[k]=DEF[k]);D.cfg.v=2}
+  if(!D.func.some(f=>f.user=="admin"))D.func.unshift({id:"f0",nome:"Administrador",cod:"F001",tel:"",cargo:"Administrador",user:"admin",senha:"1234",ativo:1});
+  for(const f of D.func)if(!f.h){f.senha=await hash(f.user,f.senha);f.h=1}
+  save();apply();render();
+}
+
+/* ===== 3. COMPONENTES ===== */
+const none=t=>`<div class="card empty">${t}</div>`;
+const kpi=(i,l,v,c)=>`<div class="kpi" style="background:${c}"><i>${i}</i><b>${v}</b><span>${l}</span></div>`;
+const seg=(k,o)=>`<div class="seg">${o.map(([v,l])=>`<button data-act="sub" data-k="${k}" data-id="${v}" aria-pressed="${S.sub[k]==v}">${l}</button>`).join("")}</div>`;
+const logo=()=>D.cfg.logo?`<img src="${D.cfg.logo}" alt="" class="logo">`:'<span class="logo e">📚</span>';
+const search=(k,ph,btn)=>`<div class="bar"><input id="qs" data-k="${k}" type="search" placeholder="${ph}" value="${esc(S.q[k]||"")}"><button class="blue" data-act="new" data-k="${k}">${btn}</button></div>`;
+const row=(av,t,s,chip,acts,cls)=>`<div class="card ${cls||""}"><div class="item"><div class="av">${esc(String(av).slice(0,1).toUpperCase())}</div><div class="info"><div class="t">${esc(t)}</div><div class="m">${esc(s)}</div>${chip}</div></div>${acts?`<div class="mini">${acts}</div>`:""}</div>`;
+function chip(e){
+  if(e.ret)return `<span class="chip gray">Devolvido a ${fmt(e.ret)}${late(e)?" · "+late(e)+" dias de atraso":""}</span>`;
+  const n=late(e);
+  if(n)return `<span class="chip bad">ATRASADO · ${n} ${n==1?"dia":"dias"} · previsto ${fmt(e.dev)}</span>`;
+  const d=diff(e.dev,today());
+  return `<span class="chip ${d<=1?"warn":""}">${d==0?"Devolver hoje":"Devolver até "+fmt(e.dev)}</span>`;
+}
+const empRow=(e,btn)=>row(nm(D.livros,e.livro),nm(D.livros,e.livro),`${nm(D.alunos,e.aluno)} · saiu a ${fmt(e.data)} · por ${nm(D.func,e.func)}`,chip(e),btn?`<button class="sm blue" data-act="ret" data-id="${e.id}">Registar devolução</button>`:"",!e.ret&&late(e)?"bad":"");
+
+/* ===== 4. ESTRUTURA DOS REGISTOS ===== */
+const FD={
+  livros:[["cod","Código (opcional)"],["nome","Título *","text","required"],["autor","Autor"],["cat","Categoria"],["edit","Editora"],["ano","Ano de publicação","number",'min="1000" max="2100"'],["qtd","Quantidade de exemplares *","number",'min="1" required']],
+  alunos:[["nome","Nome completo *","text","required"],["ident","Nº de identificação escolar"],["classe","Classe"],["turma","Turma"],["num","Nº na turma"],["tel","Contacto telefónico","tel"],["bairro","Bairro"]],
+  func:[["nome","Nome completo *","text","required"],["cod","Código de identificação"],["tel","Contacto","tel"],["cargo","Cargo"],["user","Utilizador *","text","required autocapitalize=off"],["senha","Senha * (vazio mantém a atual)","password"]]
+};
+const M={
+  livros:{ph:"Pesquisar por título, autor ou código",btn:"＋ Novo livro",s:l=>[l.cod,l.autor,l.cat,l.edit,l.ano].filter(Boolean).join(" · "),c:l=>{const d=disp(l);return `<span class="chip ${d?"":"bad"}">${d} de ${l.qtd} disponíveis</span>`}},
+  alunos:{ph:"Pesquisar leitor, classe ou turma",btn:"＋ Novo leitor",s:a=>[a.ident&&"ID "+a.ident,a.classe&&"Classe "+a.classe,a.turma&&"Turma "+a.turma,a.num&&"Nº "+a.num,a.tel,a.bairro].filter(Boolean).join(" · "),c:a=>{const n=act().filter(e=>e.aluno==a.id).length;return n?`<span class="chip warn">${n} por devolver</span>`:""}},
+  func:{ph:"Pesquisar funcionário",btn:"＋ Novo funcionário",s:f=>[f.cod,f.cargo,f.tel,"utilizador "+f.user].filter(Boolean).join(" · "),c:f=>`<span class="chip ${f.ativo?"":"gray"}">${f.ativo?"Ativo":"Inativo"}</span>`}
+};
+function formK(k){
+  const e=S.ed[k]?g(D[k],S.ed[k]):null;
+  return `<form id="f_${k}" class="card"><div class="t">${e?"Editar registo":"Novo registo"}</div>`+FD[k].map(([n,l,t,x])=>`<label for="${k}_${n}">${l}</label><input id="${k}_${n}" type="${t||"text"}" ${x||""} ${n=="senha"&&!e?"required":""} value="${n=="senha"?"":esc(e?e[n]:"")}">`).join("")+`<button class="pri">${e?"Guardar alterações":"Registar"}</button><button type="button" class="full" data-act="cx" data-id="${k}">Cancelar</button></form>`;
+}
+function listaK(k){
+  const s=(S.q[k]||"").toLowerCase(),m=M[k];
+  const r=[...D[k]].filter(x=>!s||FD[k].filter(f=>f[0]!="senha").map(f=>x[f[0]]).join(" ").toLowerCase().includes(s)).sort((a,b)=>a.nome.localeCompare(b.nome));
+  return r.length?r.map(x=>row(x.nome,x.nome,m.s(x)||"Sem mais dados",m.c(x),`<button class="sm blue" data-act="ed" data-k="${k}" data-id="${x.id}">Editar</button>`+(k=="func"?`<button class="sm" data-act="tf" data-id="${x.id}">${x.ativo?"Desativar":"Ativar"}</button>`:`<button class="sm red" data-act="rm" data-k="${k}" data-id="${x.id}">Remover</button>`))).join(""):none("Nenhum registo encontrado.");
+}
+const collScreen=k=>search(k,M[k].ph,M[k].btn)+(S.open[k]||S.ed[k]?formK(k):"")+`<div id="lista">${listaK(k)}</div>`;
+async function subK(k){
+  const v=n=>$("#"+k+"_"+n).value.trim(),e=S.ed[k]?g(D[k],S.ed[k]):null,o={};
+  FD[k].forEach(([n])=>{if(n!="senha")o[n]=v(n)});
+  if(k=="livros"){
+    o.qtd=Math.max(1,parseInt(o.qtd)||1);
+    if(e&&o.qtd<out(e.id).length)return toast("Há "+out(e.id).length+" exemplares emprestados");
+    if(!o.cod)o.cod=e&&e.cod?e.cod:"L"+String(D.livros.length+1).padStart(3,"0");
+    if(D.livros.some(l=>l.cod==o.cod&&(!e||l.id!=e.id)))return toast("Esse código já existe");
+  }
+  if(k=="func"){
+    if(D.func.some(f=>f.user==o.user&&(!e||f.id!=e.id)))return toast("Esse utilizador já existe");
+    if(!o.cod)o.cod=e&&e.cod?e.cod:"F"+String(D.func.length+1).padStart(3,"0");
+    const p=$("#func_senha").value;
+    if(p){o.senha=await hash(o.user,p);o.h=1}else if(e&&e.user!=o.user)return toast("Ao mudar o utilizador, defina uma nova senha");
+  }
+  if(e)Object.assign(e,o);else{o.id=uid();if(k=="func")o.ativo=1;D[k].push(o)}
+  S.ed[k]=null;S.open[k]=false;save();render();toast(e?"Alterações guardadas":"Registo guardado");
+}
+
+/* ===== 5. ECRÃS ===== */
+function listaE(){
+  const s=(S.q.emp||"").toLowerCase(),sb=S.sub.circ,m=e=>!s||[nm(D.livros,e.livro),nm(D.alunos,e.aluno),nm(D.func,e.func)].join(" ").toLowerCase().includes(s);
+  let r=sb=="hist"?D.emp.filter(e=>e.ret&&m(e)).reverse().slice(0,50):act().filter(m).sort((x,y)=>x.dev<y.dev?-1:1);
+  if(sb=="atraso")r=r.filter(e=>late(e)>0);
+  return r.length?r.map(e=>empRow(e,!e.ret)).join(""):none(sb=="hist"?"Ainda não há devoluções.":sb=="atraso"?"Nenhum atraso. 🎉":"Nenhum empréstimo em curso.");
+}
+function formE(){
+  const bs=D.livros.filter(l=>disp(l)>0),ok=bs.length&&D.alunos.length;
+  return `<form id="fe" class="card"><div class="t">Novo empréstimo</div><label for="ea">Leitor</label><select id="ea" required>${D.alunos.map(a=>`<option value="${a.id}">${esc(a.nome)}${a.turma?" ("+esc(a.turma)+")":""}</option>`).join("")}</select><label for="el">Livro</label><select id="el" required>${bs.map(l=>`<option value="${l.id}">${esc(l.nome)} (${disp(l)})</option>`).join("")}</select><label for="ed">Data prevista de devolução</label><input id="ed" type="date" required min="${today()}" value="${plus(D.cfg.dias)}"><div class="m" style="margin-top:8px">Funcionário responsável: ${esc(S.me.nome)}</div><button class="pri" ${ok?"":"disabled"}>Registar empréstimo</button>${ok?"":'<div class="m" style="margin-top:8px">É preciso ter um leitor e um livro disponível.</div>'}<button type="button" class="full" data-act="cx" data-id="emp">Cancelar</button></form>`;
+}
+const V={
+ini(){
+  const at=atras(),br=breve(),tot=D.livros.reduce((a,l)=>a+l.qtd,0),st=(n,l,c)=>`<div><b style="color:${c}">${n}</b><span>${l}</span></div>`;
+  return `<div class="hero">${logo()}<div><b>${esc(D.cfg.ent)}</b><div>${esc(D.cfg.sis)}</div><small>${new Date().toLocaleDateString("pt-PT",{weekday:"long",day:"numeric",month:"long"})}</small></div></div>`
+  +`<div class="card stats">${st(tot,"Exemplares","var(--destaque)")}${st(tot-act().length,"Disponíveis","var(--ok)")}${st(act().length,"Por devolver","var(--warn)")}${st(at.length,"Atrasos","var(--bad)")}</div>`
+  +`<h2>Ações rápidas</h2><div class="quick"><button data-act="quick" data-id="emp"><i>🔄</i>Empréstimo</button><button data-act="quick" data-id="livros"><i>📘</i>Novo livro</button><button data-act="quick" data-id="alunos"><i>🎓</i>Novo leitor</button></div>`
+  +`<h2>Atrasos (${at.length})</h2>`+(at.length?at.slice(0,5).map(e=>empRow(e,1)).join(""):none("Nenhum livro em atraso."))
+  +(br.length?`<h2>A vencer em breve (${br.length})</h2>`+br.map(e=>empRow(e,1)).join(""):"");
+},
+acervo:()=>collScreen("livros"),
+circ(){
+  const a=act(),n=atras().length;
+  return seg("circ",[["curso","Em curso ("+a.length+")"],["atraso","Atrasados ("+n+")"],["hist","Histórico"]])+`<div class="bar"><input id="qs" data-k="emp" type="search" placeholder="Livro, leitor ou funcionário" value="${esc(S.q.emp||"")}"><button class="blue" data-act="new" data-k="emp">＋ Empréstimo</button></div>`+(S.open.emp?formE():"")+`<div id="lista">${listaE()}</div>`;
+},
+pessoas:()=>seg("pessoas",[["alunos","Leitores ("+D.alunos.length+")"],["func","Funcionários ("+D.func.length+")"]])+collScreen(S.sub.pessoas),
+mais:()=>seg("mais",[["rel","Relatórios"],["cfg","Definições"]])+V[S.sub.mais](),
+rel(){
+  const at=atras(),cnt=k=>{const m={};D.emp.forEach(e=>m[e[k]]=(m[e[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1])};
+  const top=cnt("livro").slice(0,5),pf=cnt("func"),tot=D.livros.reduce((a,l)=>a+l.qtd,0);
+  return `<div class="grid">${kpi("📚","Exemplares registados",tot,"var(--destaque)")}${kpi("✅","Disponíveis",tot-act().length,"var(--ok)")}${kpi("📖","Por devolver",act().length,"#b45309")}${kpi("↩️","Devoluções feitas",D.emp.filter(e=>e.ret).length,"#7c3aed")}${kpi("⚠️","Atrasados",at.length,"var(--bad)")}${kpi("🗂️","Empréstimos feitos",D.emp.length,"#0e7490")}</div>`
+  +`<h2>Livros mais emprestados</h2>`+(top.length?top.map(([id,n])=>`<div class="card row"><span>${esc(nm(D.livros,id))}</span><b>${n}</b></div>`).join(""):none("Sem dados ainda."))
+  +`<h2>Leitores com atraso</h2>`+(at.length?at.map(e=>{const a=g(D.alunos,e.aluno)||{};return `<div class="card bad"><div class="t">${esc(nm(D.alunos,e.aluno))}</div><div class="m">${esc([a.classe&&"Classe "+a.classe,a.turma&&"Turma "+a.turma,a.tel].filter(Boolean).join(" · ")||"sem contacto")}</div><div class="m">${esc(nm(D.livros,e.livro))} · ${late(e)} dias de atraso</div></div>`}).join(""):none("Nenhum leitor com atraso."))
+  +`<h2>Atividade por funcionário</h2>`+(pf.length?pf.map(([id,n])=>`<div class="card row"><span>${esc(nm(D.func,id))}</span><b>${n}</b></div>`).join(""):none("Sem dados ainda."))
+  +`<h2>Exportar (Excel)</h2><div class="card"><div class="two"><button data-act="x" data-id="livros">Livros</button><button data-act="x" data-id="alunos">Leitores</button><button data-act="x" data-id="emp">Empréstimos</button><button data-act="x" data-id="func">Funcionários</button></div></div>`;
+},
+cfg(){
+  const c=D.cfg,ci=(k,l,t)=>`<div><label for="c_${k}">${l}</label><input id="c_${k}" data-c="${k}" type="${t||"text"}" value="${esc(c[k])}"></div>`;
+  return `<div class="card"><div class="t">Identidade</div>${ci("ent","Nome da entidade")}${ci("sis","Nome do sistema")}${ci("sub","Subtítulo")}<label for="c_logo">Foto / logótipo</label><input id="c_logo" type="file" accept="image/*" data-img="logo">${c.logo?'<button class="sm full" data-act="clr" data-id="logo">Remover foto</button>':""}</div>`
+  +`<div class="card"><div class="t">Aparência</div><div class="m">Modelos prontos:</div><div class="pre">${PRE.map((p,i)=>`<button class="sm" data-act="pre" data-id="${i}">${p[0]}</button>`).join("")}</div><div class="two">${ci("fundo","Cor do fundo","color")}${ci("painel","Cor dos painéis","color")}${ci("destaque","Cor de destaque","color")}${ci("ok","Cor dos botões","color")}${ci("texto","Cor do texto","color")}</div><label for="c_bg">Imagem de fundo</label><input id="c_bg" type="file" accept="image/*" data-img="bg">${c.bg?'<button class="sm full" data-act="clr" data-id="bg">Remover imagem de fundo</button>':""}</div>`
+  +`<div class="card"><div class="t">Empréstimos</div>${ci("dias","Dias de empréstimo (por defeito)","number")}</div>`
+  +`<form id="fpw" class="card"><div class="t">A minha senha</div><label for="pa">Senha atual</label><input id="pa" type="password" required><label for="pn">Nova senha</label><input id="pn" type="password" minlength="4" required><button class="pri">Alterar senha</button></form>`
+  +`<div class="card"><div class="t">Cópia de segurança</div><div class="m">Guarde regularmente um ficheiro com todos os dados.</div><button class="pri blue" data-act="bk">Guardar cópia (JSON)</button><label for="rs">Restaurar de um ficheiro</label><input id="rs" type="file" accept=".json,application/json" data-restore="1"><button class="full red" data-act="reset">Apagar todos os dados</button></div>`;
+}};
+const NAV={ini:["🏠","Início","Início"],acervo:["📚","Acervo","Acervo de livros"],circ:["🔄","Circulação","Empréstimos e devoluções"],pessoas:["👥","Pessoas","Leitores e funcionários"],mais:["⋯","Mais","Relatórios e definições"]};
+function render(){
+  const nav=$("#nav"),top=$("#top"),app=$("#app"),c=D.cfg;
+  if(!S.me){
+    nav.hidden=top.hidden=true;
+    app.innerHTML=`<div class="login"><div class="hero">${logo()}<div><b>${esc(c.sis)}</b><div>${esc(c.ent)}</div><small>${esc(c.sub)}</small></div></div><form id="fx" class="card"><label for="xu">Utilizador</label><input id="xu" value="admin" autocapitalize="off" required><label for="xs">Senha</label><input id="xs" type="password" required><button class="pri blue">ENTRAR</button></form></div>`;
+    return;
+  }
+  nav.hidden=top.hidden=false;
+  top.innerHTML=`${logo()}<div><b>${esc(c.ent)}</b><span class="m">${NAV[S.tab][2]} · ${esc(S.me.nome)}</span></div><button class="sm" data-act="sair">Sair</button>`;
+  nav.innerHTML=Object.keys(NAV).map(k=>`<button role="tab" data-tab="${k}" aria-selected="${k==S.tab}"><i>${NAV[k][0]}</i>${NAV[k][1]}</button>`).join("");
+  app.innerHTML=V[S.tab]();
+}
+
+/* ===== 6. EXPORTAR ===== */
+function exp(k){
+  const T={
+    livros:[["Código","Título","Autor","Categoria","Editora","Ano","Quantidade","Disponíveis"],...D.livros.map(l=>[l.cod,l.nome,l.autor,l.cat,l.edit,l.ano,l.qtd,disp(l)])],
+    alunos:[["Nome","ID escolar","Classe","Turma","Nº turma","Contacto","Bairro"],...D.alunos.map(a=>[a.nome,a.ident,a.classe,a.turma,a.num,a.tel,a.bairro])],
+    func:[["Nome","Código","Contacto","Cargo","Utilizador","Ativo"],...D.func.map(f=>[f.nome,f.cod,f.tel,f.cargo,f.user,f.ativo?"Sim":"Não"])],
+    emp:[["Livro","Leitor","Funcionário","Saída","Previsto","Devolvido","Dias de atraso"],...D.emp.map(x=>[nm(D.livros,x.livro),nm(D.alunos,x.aluno),nm(D.func,x.func),x.data,x.dev,x.ret||"",late(x)])]
+  }[k];
+  if(T.length<2)return toast("Não há dados para exportar");
+  dl("esgn-"+k+"-"+today()+".csv","\ufeff"+T.map(r=>r.map(c=>'"'+String(c==null?"":c).replace(/"/g,'""')+'"').join(";")).join("\r\n"),"text/csv;charset=utf-8");
+  toast("Ficheiro guardado");
+}
+
+/* ===== 7. EVENTOS ===== */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tab],[data-act]");if(!t)return;
+  if(t.dataset.tab){S.tab=t.dataset.tab;render();scrollTo(0,0);return}
+  const a=t.dataset.act,id=t.dataset.id,k=t.dataset.k;
+  if(a=="sair"){S.me=null;render()}
+  if(a=="sub"){S.sub[k]=id;render()}
+  if(a=="new"){S.open[k]=!S.open[k];S.ed[k]=null;render()}
+  if(a=="quick"){S.tab=id=="emp"?"circ":id=="livros"?"acervo":"pessoas";if(id=="alunos")S.sub.pessoas="alunos";S.open[id]=true;S.ed[id]=null;render();scrollTo(0,0)}
+  if(a=="cx"){S.ed[id]=null;S.open[id]=false;render()}
+  if(a=="ed"){S.ed[k]=id;render();scrollTo(0,0)}
+  if(a=="ret"){const x=g(D.emp,id);x.ret=today();save();render();toast(late(x)?"Devolvido com "+late(x)+" dias de atraso":"Devolução registada")}
+  if(a=="rm"){
+    if(k=="livros"&&out(id).length)return toast("Este livro tem empréstimos em curso");
+    if(k=="alunos"&&act().some(x=>x.aluno==id))return toast("Este leitor tem livros por devolver");
+    if(!confirm("Remover este registo?"))return;
+    D[k]=D[k].filter(x=>x.id!=id);save();render();
+  }
+  if(a=="tf"){const f=g(D.func,id);if(f.id==S.me.id)return toast("Não pode desativar o seu próprio utilizador");f.ativo=f.ativo?0:1;save();render()}
+  if(a=="x")exp(id);
+  if(a=="bk")dl("copia-biblioteca-"+today()+".json",JSON.stringify(D),"application/json");
+  if(a=="clr"){D.cfg[id]="";save();apply();render()}
+  if(a=="pre"){const p=PRE[id];["fundo","painel","destaque","ok","texto"].forEach((n,i)=>D.cfg[n]=p[i+1]);save();apply();render()}
+  if(a=="reset"&&confirm("Apagar TODOS os dados?")&&confirm("Tem a certeza? Isto não pode ser desfeito.")){localStorage.removeItem(KEY);location.reload()}
+});
+document.addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.target.id;
+  if(f=="fx"){const u=D.func.find(x=>x.user==$("#xu").value.trim()&&x.ativo);if(!u||u.senha!=await hash(u.user,$("#xs").value))return toast("Utilizador ou senha incorretos");S.me=u;S.tab="ini";render();return}
+  if(f.startsWith("f_"))return subK(f.slice(2));
+  if(f=="fe"){const l=g(D.livros,$("#el").value);if(!l||disp(l)<1)return toast("Sem exemplares disponíveis");D.emp.push({id:uid(),aluno:$("#ea").value,livro:l.id,func:S.me.id,data:today(),dev:$("#ed").value,ret:null});S.open.emp=false;save();render();toast("Empréstimo registado")}
+  if(f=="fpw"){if(S.me.senha!=await hash(S.me.user,$("#pa").value))return toast("Senha atual incorreta");S.me.senha=await hash(S.me.user,$("#pn").value);save();render();toast("Senha alterada")}
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.id!="qs")return;const k=t.dataset.k;S.q[k]=t.value;$("#lista").innerHTML=k=="emp"?listaE():listaK(k)});
+document.addEventListener("change",async e=>{
+  const t=e.target,d=t.dataset;
+  if(d.c){D.cfg[d.c]=d.c=="dias"?Math.max(1,parseInt(t.value)||7):t.value;save();apply();render()}
+  if(d.img&&t.files[0]){const k=d.img;img(t.files[0],k=="logo"?256:1000,k=="logo"?"image/png":"image/jpeg",u=>{D.cfg[k]=u;save();apply();render()})}
+  if(d.restore&&t.files[0]){
+    try{const p=JSON.parse(await t.files[0].text());if(!Array.isArray(p.livros)||!Array.isArray(p.func))throw 0;D=Object.assign({livros:[],alunos:[],func:[],emp:[],dia:{},cfg:{}},p);S.me=null;await boot();toast("Dados restaurados")}catch(x){toast("Ficheiro inválido")}
+  }
+});
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+boot();
+</script></body></html>
